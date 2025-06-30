@@ -20,6 +20,9 @@ const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 const emailjs = require('emailjs-com');
 
+const Listing = require("./models/listing.js"); // add this near your imports
+const initData = require("./init/data.js"); // this too, at the top with imports
+
 // Initialize EmailJS
 emailjs.init(process.env.EMAILJS_PUBLIC_KEY);
 
@@ -209,6 +212,66 @@ app.get("/reset-password", (req, res) => {
   }
   res.render("users/reset-password", { token });
 });
+
+
+// 👇 Create "Team Roomwati" user route
+app.get("/create-roomwati-user", async (req, res) => {
+  try {
+    const newUser = new User({
+      email: "team@roomwati.com",
+      username: "Team Roomwati",
+      bio: "We're the RoomWati team, powering seamless stays and unique spaces.",
+      image: {
+        url: "https://cdn.pixabay.com/photo/2018/11/13/22/01/avatar-3814081_1280.png",
+        filename: "default-avatar"
+      },
+      coverImage: {
+        url: "https://res.cloudinary.com/dxqjlxgsh/image/upload/v1703420360/RoomWati/default-cover_kxn8dr.jpg",
+        filename: "default-cover"
+      }
+    });
+
+    const registeredUser = await User.register(newUser, "roomwati123");
+    res.send(`✅ Created user 'Team Roomwati' with ID: ${registeredUser._id}`);
+  } catch (err) {
+    console.error("❌ Error creating Team Roomwati user:", err);
+    res.status(500).send("❌ Could not create Team Roomwati user.");
+  }
+});
+
+
+// 👇 Seed route using "Team Roomwati" user ID
+app.get("/seed", async (req, res) => {
+  try {
+    const ownerId = "PASTE_OWNER_ID_HERE"; // <== Paste Team Roomwati _id here
+    await Listing.deleteMany({});
+
+    const listings = initData.data.map((obj) => ({
+      ...obj,
+      owner: ownerId
+    }));
+
+    await Listing.insertMany(listings);
+    res.send("✅ Database seeded with sample listings.");
+  } catch (err) {
+    console.error("❌ Error seeding database:", err);
+    res.status(500).send("❌ Seeding failed.");
+  }
+});
+
+
+// 👇 Route to delete seeded listings
+app.get("/delete-seed", async (req, res) => {
+  try {
+    await Listing.deleteMany({});
+    res.send("🗑️ All seeded listings deleted.");
+  } catch (err) {
+    console.error("❌ Error deleting listings:", err);
+    res.status(500).send("❌ Failed to delete listings.");
+  }
+});
+
+
 
 // Handle 404 errors
 app.all("*",(req,res,next)=>{ //agr upr kisi bhi listing se match nhi hua toh yha hoga (jo create hi nhi kiye unhe access krte time yeh kaam krega)
