@@ -243,7 +243,7 @@ app.get("/create-roomwati-user", async (req, res) => {
 // 👇 Seed route using "Team Roomwati" user ID
 app.get("/seed", async (req, res) => {
   try {
-    const ownerId = "PASTE_OWNER_ID_HERE"; // <== Paste Team Roomwati _id here
+    const ownerId = "6862f0a5e13ae10af456daa7"; // <== Paste Team Roomwati _id here
     await Listing.deleteMany({});
 
     const listings = initData.data.map((obj) => ({
