@@ -20,6 +20,9 @@ const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
 const emailjs = require('emailjs-com');
 
+const Listing = require("./models/listing.js");
+const initData = require("./init/data.js");
+
 // Initialize EmailJS
 emailjs.init(process.env.EMAILJS_PUBLIC_KEY);
 
@@ -208,6 +211,23 @@ app.get("/reset-password", (req, res) => {
     return res.redirect("/forgot-password");
   }
   res.render("users/reset-password", { token });
+});
+
+// Temporary seed route for Atlas seeding
+app.get("/seed", async (req, res) => {
+  try {
+    await Listing.deleteMany({});
+    const data = initData.data.map((obj) => ({
+      ...obj,
+      owner: "680be7383ee92c495b309c8e", // use your real user ID
+    }));
+    await Listing.insertMany(data);
+    console.log("✅ Seeded listings to Atlas!");
+    res.send("✅ Listings seeded to database!");
+  } catch (err) {
+    console.error("❌ Seeding failed:", err);
+    res.status(500).send("❌ Error while seeding listings.");
+  }
 });
 
 // Handle 404 errors
