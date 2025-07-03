@@ -223,7 +223,7 @@ RoomWati/
 
 <p align="center">
   <img src="public/screenshots/signup-otp.png" alt="🔐 Signup / OTP Verification" width="700"/>
-  <br><strong>🔐 Signup / OTP Verification</strong>
+  <br><strong>🔐 Signup Form</strong>
 </p>
 
 
