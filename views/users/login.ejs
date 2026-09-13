@@ -291,13 +291,25 @@
     const passwordButtonText = document.getElementById("passwordButtonText");
     const passwordError = document.getElementById("passwordError");
 
+    function showPasswordError(message) {
+      if (passwordError) {
+        passwordError.textContent = message;
+        passwordError.classList.remove("d-none");
+      }
+    }
+
     if (passwordLoginForm) {
       passwordLoginForm.addEventListener("submit", async function (e) {
         e.preventDefault();
 
         const formData = new FormData(passwordLoginForm);
-        const username = formData.get("username");
+        const username = (formData.get("username") || "").trim();
         const password = formData.get("password");
+
+        if (!username || !password) {
+          showPasswordError("Please enter both username/email and password.");
+          return;
+        }
 
         // Show loading state
         passwordSpinner.classList.remove("d-none");
@@ -309,29 +321,30 @@
             method: "POST",
             headers: {
               "Content-Type": "application/json",
+              "Accept": "application/json"
             },
             body: JSON.stringify({ username, password }),
             credentials: "same-origin",
           });
 
-          if (response.redirected) {
-            window.location.href = response.url;
-          } else {
+          if (response.ok) {
             const result = await response.json();
-            if (result.requiresOtp) {
-              // Redirect to OTP verification
-              window.location.href = `/verify-otp?email=${encodeURIComponent(
-                result.email
-              )}`;
+            if (result.success) {
+              window.location.href = result.redirectUrl || "/listings";
             } else {
-              showPasswordError(
-                result.message || "Invalid username or password"
-              );
+              showPasswordError(result.message || "Invalid username or password");
             }
+          } else {
+            let errorMsg = "Invalid username or password";
+            try {
+              const result = await response.json();
+              if (result.message) errorMsg = result.message;
+            } catch (err) {}
+            showPasswordError(errorMsg);
           }
         } catch (error) {
           console.error("Login error:", error);
-          showPasswordError("An error occurred. Please try again.");
+          showPasswordError("An error occurred during login. Please try again.");
         } finally {
           passwordSpinner.classList.add("d-none");
           passwordButtonText.textContent = "Log in";

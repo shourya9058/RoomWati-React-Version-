@@ -79,12 +79,12 @@ const listingSchema = new Schema({
   // Room booking-specific fields
   roomType: {
     type: String,
-    enum: ["single", "shared", "studio", "ensuite"],
+    enum: ["single", "shared", "studio", "ensuite", "entire_apartment", "apartment"],
     default: "single",
   },
   furnished: {
     type: String,
-    enum: ["furnished", "unfurnished", "semifurnished"],
+    enum: ["furnished", "unfurnished", "semifurnished", "semi-furnished"],
     default: "furnished",
   },
   genderPreference: {

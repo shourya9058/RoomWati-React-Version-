@@ -160,23 +160,26 @@
               this.classList.add('animating');
               setTimeout(() => this.classList.remove('animating'), 600);
 
+              const listingCard = this.closest('.listing-col');
+
               if (data.status === 'added') {
                 // Added to favorites
                 icon.classList.remove('far');
                 icon.classList.add('fas');
                 this.classList.add('active');
+                if (listingCard) listingCard.setAttribute('data-is-favorite', 'true');
                 showToast('Added to favorites!', 'added');
                 
                 // Update favorite count from server response if available
                 if (data.favoriteCount !== undefined) {
                   updateFavoriteCounts(data.favoriteCount);
                 }
-                
               } else {
                 // Removed from favorites
                 icon.classList.remove('fas');
                 icon.classList.add('far');
                 this.classList.remove('active');
+                if (listingCard) listingCard.setAttribute('data-is-favorite', 'false');
                 showToast('Removed from favorites', 'removed');
                 
                 // Update favorite count from server response if available

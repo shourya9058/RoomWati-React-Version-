@@ -138,6 +138,9 @@ module.exports.createListing = async (req, res, next) => {
 
         let url = req.file.path;
         let filename = req.file.filename;
+        if (!url.startsWith('http://') && !url.startsWith('https://')) {
+            url = `/uploads/${filename}`;
+        }
         
         // Prepare listing data with proper type conversion
         const listingData = {
@@ -218,8 +221,10 @@ module.exports.createListing = async (req, res, next) => {
             req.flash("error", "Requested listing does not exist!");
             res.redirect("/listings");
         }
-        let originalImageUrl = listing.image.url;
-        originalImageUrl = originalImageUrl.replace("/upload","/upload/w_250")
+        let originalImageUrl = listing.image?.url || "";
+        if (originalImageUrl.includes("/upload")) {
+            originalImageUrl = originalImageUrl.replace("/upload","/upload/w_250");
+        }
         res.render("listings/edit.ejs", {listing, originalImageUrl});
     };
 
@@ -246,6 +251,9 @@ module.exports.createListing = async (req, res, next) => {
             if (req.file) {
                 let url = req.file.path;
                 let filename = req.file.filename;
+                if (!url.startsWith('http://') && !url.startsWith('https://')) {
+                    url = `/uploads/${filename}`;
+                }
                 listing.image = { url, filename };
                 await listing.save();
             }

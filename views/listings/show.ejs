@@ -1008,7 +1008,8 @@
         }
         
         // Check if user is logged in
-        if (!<%= currentUser ? 'true' : 'false' %>) {
+        const isLoggedIn = Boolean("<%= currentUser ? currentUser._id : '' %>");
+        if (!isLoggedIn) {
           window.location.href = '/login';
           return;
         }
@@ -1020,7 +1021,7 @@
         icon.className = 'fas fa-spinner fa-spin';
         
         try {
-          const response = await fetch(`/user/toggle-favorite/${listingId}`, {
+          const response = await fetch(`/toggle-favorite/${listingId}`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -1070,6 +1071,7 @@
             document.querySelectorAll('.favorite-count').forEach(el => {
               el.textContent = currentFavoriteCount;
             });
+          }
         } catch (error) {
           console.error('Error toggling favorite:', error);
           showToast('Please login to add listings to favorites', 'error');

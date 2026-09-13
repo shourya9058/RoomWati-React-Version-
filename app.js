@@ -1,296 +1,361 @@
-if(process.env.NODE_ENV != "production"){ //production env mein yeh wala data koi access na kr paaye isiliye (aage ka kaam h)
+if (process.env.NODE_ENV !== "production") {
     require('dotenv').config();
 }
-// console.log(process.env.SECRET); .env ka data access krne ka tareeka
+
 const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
-const path = require("path"); //views se ejs pages render krwane k liye
+const path = require("path");
 const methodOverride = require("method-override");
-const ejsMate = require("ejs-mate"); //basically bhut saare templates/layouts create krne mein help krte h jo hrr page mein same rehte h like navBar ya footer
-const ExpressError = require("./utils/ExpressError.js");
-const listingRouter = require("./routes/listings.js");
-const reviewRouter = require("./routes/review.js");
-const userRouter = require("./routes/user.js");
-const authRouter = require("./routes/auth.js");
+const ejsMate = require("ejs-mate");
 const session = require("express-session");
 const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
+
+const connectMongo = require("connect-mongo");
+const MongoStore = connectMongo.default || connectMongo.MongoStore || connectMongo;
+
+const ExpressError = require("./utils/ExpressError.js");
 const User = require("./models/user.js");
-const emailjs = require('emailjs-com');
+const Listing = require("./models/listing.js");
+const initData = require("./init/data.js");
+const cors = require("cors");
 
-const Listing = require("./models/listing.js"); // add this near your imports
-const initData = require("./init/data.js"); // this too, at the top with imports
+const isProduction = process.env.NODE_ENV === "production";
 
-// Initialize EmailJS
-emailjs.init(process.env.EMAILJS_PUBLIC_KEY);
-
-
-
-port = 8080;
-
-// let mongo_url = "mongodb://127.0.0.1:27017/wanderlust";
-dbUrl = process.env.ATLASDB_URL;
-
-main()
-.then(()=>{
-    console.log("DB working fine")
-})
-.catch(err => console.log(err));
-
-async function main() {
-  await mongoose.connect(dbUrl);
+// Trust first proxy when running behind Nginx / AWS in production
+if (isProduction) {
+    app.set('trust proxy', 1);
 }
+
+const listingRouter = require("./routes/listings.js");
+const reviewRouter = require("./routes/review.js");
+const userRouter = require("./routes/user.js");
+const authRouter = require("./routes/auth.js");
+
+// API Routers for Modern React Frontend
+const apiAuthRouter = require("./routes/api/auth.js");
+const apiListingRouter = require("./routes/api/listings.js");
+const apiReviewRouter = require("./routes/api/reviews.js");
+const apiUserRouter = require("./routes/api/users.js");
+const apiChatRouter = require("./routes/api/chats.js");
+const apiVisitRouter = require("./routes/api/visits.js");
+
+const port = process.env.PORT || 8080;
+const dbUrl = process.env.ATLASDB_URL || process.env.MONGO_URL;
+
+let mongoServer;
+
+async function connectDB() {
+    if (dbUrl) {
+        try {
+            console.log("Attempting connection to configured MongoDB...");
+            await mongoose.connect(dbUrl);
+            console.log("✅ Connected to MongoDB Atlas/External DB successfully!");
+            return;
+        } catch (err) {
+            console.warn("⚠️ Configured MongoDB Atlas connection failed:", err.message);
+            console.log("🔄 Starting local in-memory MongoDB fallback for development...");
+        }
+    } else {
+        console.log("ℹ️ No ATLASDB_URL provided. Starting in-memory MongoDB for local development...");
+    }
+
+    try {
+        const { MongoMemoryServer } = require("mongodb-memory-server");
+        mongoServer = await MongoMemoryServer.create();
+        const uri = mongoServer.getUri();
+        await mongoose.connect(uri);
+        console.log("✅ In-memory MongoDB started and connected successfully!");
+
+        // Auto seed default data into in-memory DB if empty
+        const count = await Listing.countDocuments();
+        if (count === 0) {
+            console.log("🌱 Auto-seeding sample listings into local database...");
+            let defaultUser = await User.findOne({ email: "team@roomwati.com" });
+            if (!defaultUser) {
+                const newUser = new User({
+                    email: "team@roomwati.com",
+                    username: "Team Roomwati",
+                    name: "Team Roomwati",
+                    bio: "",
+                    location: "",
+                    interests: [],
+                    image: {
+                        url: "https://cdn.pixabay.com/photo/2018/11/13/22/01/avatar-3814081_1280.png",
+                        filename: "default-avatar"
+                    },
+                    coverImage: {
+                        url: "",
+                        filename: "default-cover"
+                    }
+                });
+                defaultUser = await User.register(newUser, "roomwati123");
+            }
+            const listings = initData.data.map((obj) => ({
+                ...obj,
+                owner: defaultUser._id
+            }));
+            await Listing.insertMany(listings);
+            console.log(`✅ Auto-seeded ${listings.length} listings into local database.`);
+        }
+    } catch (err) {
+        console.error("❌ Failed to start in-memory database fallback:", err);
+    }
+}
+
+connectDB();
 
 // View engine setup
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 app.engine('ejs', ejsMate);
 
-// Middleware
-app.use(express.urlencoded({extended:true}));
+// Dynamic allowed origins for development and production
+const allowedOrigins = [
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+    'http://localhost:8080',
+    'http://127.0.0.1:8080',
+    ...(process.env.FRONTEND_URL ? [process.env.FRONTEND_URL.replace(/\/$/, '')] : []),
+    ...(process.env.ALLOWED_ORIGINS ? process.env.ALLOWED_ORIGINS.split(',').map(o => o.trim().replace(/\/$/, '')).filter(Boolean) : [])
+];
+
+app.use(cors({
+    origin: function (origin, callback) {
+        // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
+        if (!origin) return callback(null, true);
+        const normalizedOrigin = origin.replace(/\/$/, '');
+        if (allowedOrigins.indexOf(normalizedOrigin) !== -1 || allowedOrigins.includes('*')) {
+            return callback(null, true);
+        }
+        return callback(new Error(`CORS policy does not allow access from origin ${origin}`), false);
+    },
+    credentials: true
+}));
+app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "/public")));
 
+const store = dbUrl ? MongoStore.create({
+    mongoUrl: dbUrl,
+    crypto: {
+        secret: process.env.SECRET || 'roomwati_default_secret_key_987654321'
+    },
+    touchAfter: 24 * 3600
+}) : undefined;
+
+if (store) {
+    store.on("error", (err) => {
+        console.error("❌ ERROR in MONGO SESSION STORE:", err);
+    });
+}
 
 const sessionOptions = {
-    secret: process.env.SECRET,
+    ...(store ? { store } : {}),
+    secret: process.env.SECRET || 'roomwati_default_secret_key_987654321',
     resave: false,
-    saveUninitialized: true,
-    cookie:{
-        expires: Date.now() + 7 * 24 * 60 * 60 * 1000, //Date.now() miliseconds mein time deta h isiliye humne next seven days ko miliseconds mein convert krke add kra so that cookie agle 7 din tk saved rahe
-        maxAge : 7 * 24 * 60 * 60 * 1000,
-        httpOnly: true, //security k liye use krte h basically
+    saveUninitialized: false,
+    cookie: {
+        expires: Date.now() + 7 * 24 * 60 * 60 * 1000,
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+        httpOnly: true,
+        secure: isProduction,
+        sameSite: isProduction ? 'none' : 'lax'
     }
 };
 
-
 app.use(session(sessionOptions));
-app.use(flash()); //hamesha routes se pehle likhna h yeh (except root).
+app.use(flash());
 
-// session k baad hi passport ko use krna h.
+// Passport configuration
 app.use(passport.initialize());
-app.use(passport.session()); //A web application needs the ability to identify users as they browse from page to page. This series of requests and responses, each associated with the same user, is known as a session.
-//This middleware enables us to keep the user logged in for a single session instead of requiring the user to login again and again.
+app.use(passport.session());
 
-passport.use(new LocalStrategy(User.authenticate())); //user ko authenticate krwaega through LocalStrategy using the authenticate function.
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
-passport.serializeUser(User.serializeUser()); //user se related info store krana in a session
-passport.deserializeUser(User.deserializeUser());//user se related info remove krana in a session (session khtm hone p)
-
-// middle to pass listing to all routes so that navbar can access it and add user image
-app.use(async (req, res, next) => {
-    if (req.user) {
-      // If user is logged in (through passport)
-      res.locals.currentUser = req.user;
-      // You don't need to use listing.owner, just use currentUser directly
-    } else {
-      res.locals.currentUser = null;
-    }
-    next();
-  });
-
-
-// Flash messages middleware - must be after session and before routes
+// Expose current user & flash messages to all templates
 app.use((req, res, next) => {
-    // Initialize flash messages
-    res.locals.success = [];
-    res.locals.error = [];
+    res.locals.currentUser = req.user || null;
+    res.locals.currUser = req.user || null;
+    res.locals.success = req.flash('success') || [];
+    res.locals.error = req.flash('error') || [];
     
-    // Handle welcome message from session (one-time use)
     if (req.session.welcomeMessage && req.session.welcomeMessageShown === false) {
         res.locals.welcomeMessage = req.session.welcomeMessage;
         res.locals.showWelcomeMessage = true;
-        req.session.welcomeMessageShown = true; // Mark as shown
-        
-        // Clear after first use
+        req.session.welcomeMessageShown = true;
         setTimeout(() => {
             delete req.session.welcomeMessage;
             delete req.session.welcomeMessageShown;
         }, 100);
     }
-    
-    // Regular flash messages
-    const successMsgs = req.flash('success');
-    const errorMsgs = req.flash('error');
-    
-    if (successMsgs && successMsgs.length) {
-        res.locals.success = Array.isArray(successMsgs) ? successMsgs : [successMsgs];
-    }
-    
-    if (errorMsgs && errorMsgs.length) {
-        res.locals.error = Array.isArray(errorMsgs) ? errorMsgs : [errorMsgs];
-    }
-    
-    res.locals.currUser = req.user;
     next();
 });
 
+// Mount API routes for Modern React Frontend
+app.use("/api/auth", apiAuthRouter);
+app.use("/api/listings", apiListingRouter);
+app.use("/api/listings/:id/reviews", apiReviewRouter);
+app.use("/api/users", apiUserRouter);
+app.use("/api/chats", apiChatRouter);
+app.use("/api/visits", apiVisitRouter);
 
-//Demo user for testing passport
-
-// app.get("/demoUser",async(req,res)=>{
-//     let fakeUser = new User({
-//         email: "shourya@gmail.com",
-//         username: "singh07",
-//     });
-
-//    let registeredUser =  await User.register(fakeUser, "helloWorld"); //user ko register(with the password i.e., helloWorld) bhi krwaega plus ye bhi check krega ki kya wo user unique h ya nhi
-//    res.send(registeredUser);
-// })
-
-
-
-
-
-
-
-// Model: Listing -> Places (apartment, villas, flat, house, etc)
-// --> title - String
-// --> description - String
-// --> image (url, for beginner level) - String
-// --> price - Number
-// --> location - String
-// --> country - String
-
-// app.get("/testListing", async (req,res)=>{
-//     let sampleListing = new Listing({
-//         title: "my new villa",
-//         description: "By the beach",
-//         price: 1200,
-//         location: "Calangute, Goa",
-//         country: "India",
-//     });
-
-//     await sampleListing.save();
-//     console.log("sample was saved");
-//     res.send("successful testing");
-// });
-
+// Root route
 app.get("/", (req, res) => {
     res.redirect("/listings/home");
 });
 
-// Debug middleware to log all incoming requests
-app.use((req, res, next) => {
-    console.log(`[${new Date().toISOString()}] ${req.method} ${req.originalUrl}`);
-    next();
-});
-
-// Mount all user routes first
-app.use(userRouter);
-
-// Mount other routes
+// Mount legacy EJS routes (preserved for safety & backwards compatibility)
 app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
-app.use("", userRouter);
 app.use("/auth", authRouter);
+app.use("/", userRouter);
 
 // OTP Verification Page
 app.get("/verify-otp", (req, res) => {
-  const { email, reset } = req.query;
-  if (!email) {
-    req.flash("error", "Email is required for OTP verification");
-    return res.redirect("/login");
-  }
-  res.render("users/verify-otp", { email, isPasswordReset: reset === "true" });
+    const { email, reset } = req.query;
+    if (!email) {
+        req.flash("error", "Email is required for OTP verification");
+        return res.redirect("/login");
+    }
+    res.render("users/verify-otp", { email, isPasswordReset: reset === "true" });
 });
 
 // Forgot Password Page
 app.get("/forgot-password", (req, res) => {
-  res.render("users/forgot-password");
+    res.render("users/forgot-password");
 });
 
 // Reset Password Page
 app.get("/reset-password", (req, res) => {
-  const { token } = req.query;
-  if (!token) {
-    req.flash("error", "Invalid or expired reset link");
-    return res.redirect("/forgot-password");
-  }
-  res.render("users/reset-password", { token });
+    const { token } = req.query;
+    if (!token) {
+        req.flash("error", "Invalid or expired reset link");
+        return res.redirect("/forgot-password");
+    }
+    res.render("users/reset-password", { token });
 });
 
-
-// 👇 Create "Team Roomwati" user route
+// Create "Team Roomwati" user route
 app.get("/create-roomwati-user", async (req, res) => {
-  try {
-    const newUser = new User({
-      email: "team@roomwati.com",
-      username: "Team Roomwati",
-      bio: "We're the RoomWati team, powering seamless stays and unique spaces.",
-      image: {
-        url: "https://cdn.pixabay.com/photo/2018/11/13/22/01/avatar-3814081_1280.png",
-        filename: "default-avatar"
-      },
-      coverImage: {
-        url: "https://res.cloudinary.com/dxqjlxgsh/image/upload/v1703420360/RoomWati/default-cover_kxn8dr.jpg",
-        filename: "default-cover"
-      }
-    });
+    try {
+        let existing = await User.findOne({ email: "team@roomwati.com" });
+        if (existing) {
+            return res.send(`✅ 'Team Roomwati' user already exists with ID: ${existing._id}`);
+        }
+        const newUser = new User({
+            email: "team@roomwati.com",
+            username: "Team Roomwati",
+            bio: "We're the RoomWati team, powering seamless stays and unique spaces.",
+            image: {
+                url: "https://cdn.pixabay.com/photo/2018/11/13/22/01/avatar-3814081_1280.png",
+                filename: "default-avatar"
+            },
+            coverImage: {
+                url: "https://res.cloudinary.com/dxqjlxgsh/image/upload/v1703420360/RoomWati/default-cover_kxn8dr.jpg",
+                filename: "default-cover"
+            }
+        });
 
-    const registeredUser = await User.register(newUser, "roomwati123");
-    res.send(`✅ Created user 'Team Roomwati' with ID: ${registeredUser._id}`);
-  } catch (err) {
-    console.error("❌ Error creating Team Roomwati user:", err);
-    res.status(500).send("❌ Could not create Team Roomwati user.");
-  }
+        const registeredUser = await User.register(newUser, "roomwati123");
+        res.send(`✅ Created user 'Team Roomwati' with ID: ${registeredUser._id}`);
+    } catch (err) {
+        console.error("❌ Error creating Team Roomwati user:", err);
+        res.status(500).send("❌ Could not create Team Roomwati user.");
+    }
 });
 
-
-// 👇 Seed route using "Team Roomwati" user ID
+// Seed route
 app.get("/seed", async (req, res) => {
-  try {
-    const ownerId = "6862f0a5e13ae10af456daa7"; // <== Paste Team Roomwati _id here
-    await Listing.deleteMany({});
+    try {
+        let defaultUser = await User.findOne({ email: "team@roomwati.com" });
+        if (!defaultUser) {
+            const newUser = new User({
+                email: "team@roomwati.com",
+                username: "Team Roomwati",
+                bio: "We're the RoomWati team, powering seamless stays and unique spaces.",
+                image: {
+                    url: "https://cdn.pixabay.com/photo/2018/11/13/22/01/avatar-3814081_1280.png",
+                    filename: "default-avatar"
+                },
+                coverImage: {
+                    url: "https://res.cloudinary.com/dxqjlxgsh/image/upload/v1703420360/RoomWati/default-cover_kxn8dr.jpg",
+                    filename: "default-cover"
+                }
+            });
+            defaultUser = await User.register(newUser, "roomwati123");
+        }
 
-    const listings = initData.data.map((obj) => ({
-      ...obj,
-      owner: ownerId
-    }));
+        await Listing.deleteMany({});
+        const listings = initData.data.map((obj) => ({
+            ...obj,
+            owner: defaultUser._id
+        }));
 
-    await Listing.insertMany(listings);
-    res.send("✅ Database seeded with sample listings.");
-  } catch (err) {
-    console.error("❌ Error seeding database:", err);
-    res.status(500).send("❌ Seeding failed.");
-  }
+        await Listing.insertMany(listings);
+        res.send(`✅ Database seeded with ${listings.length} sample listings under owner ${defaultUser.username} (${defaultUser._id}).`);
+    } catch (err) {
+        console.error("❌ Error seeding database:", err);
+        res.status(500).send("❌ Seeding failed.");
+    }
 });
 
-
-// 👇 Route to delete seeded listings
+// Delete seeded listings
 app.get("/delete-seed", async (req, res) => {
-  try {
-    await Listing.deleteMany({});
-    res.send("🗑️ All seeded listings deleted.");
-  } catch (err) {
-    console.error("❌ Error deleting listings:", err);
-    res.status(500).send("❌ Failed to delete listings.");
-  }
+    try {
+        await Listing.deleteMany({});
+        res.send("🗑️ All seeded listings deleted.");
+    } catch (err) {
+        console.error("❌ Error deleting listings:", err);
+        res.status(500).send("❌ Failed to delete listings.");
+    }
 });
 
-
+// Serve built React client assets if available
+const fs = require("fs");
+const clientDistPath = path.join(__dirname, "client", "dist");
+if (fs.existsSync(clientDistPath)) {
+    app.use(express.static(clientDistPath));
+    app.get("*", (req, res, next) => {
+        // Do not intercept API routes or EJS routes that need to render
+        if (req.originalUrl.startsWith("/api") || req.originalUrl.startsWith("/uploads")) {
+            return next();
+        }
+        if (req.accepts("html")) {
+            return res.sendFile(path.join(clientDistPath, "index.html"));
+        }
+        next();
+    });
+}
 
 // Handle 404 errors
-app.all("*",(req,res,next)=>{ //agr upr kisi bhi listing se match nhi hua toh yha hoga (jo create hi nhi kiye unhe access krte time yeh kaam krega)
-    next(new ExpressError(404,"Page not found!"));
-})
-
-// middleware to handle server side errors
-app.use((err,req,res,next)=>{
-    //res.send("Something went wrong!"); //normal way
-    let {statusCode=500, message='Something went wrong!'} = err;
-    // res.status(statusCode).send(message);  //using ExpressError class (custom error)
-
-    res.status(statusCode).render("error.ejs", {message});
+app.all("*", (req, res, next) => {
+    next(new ExpressError(404, "Page not found!"));
 });
 
-
-
-app.listen(port, ()=>{
-    console.log(`Listening at port:  ${port}`);
+// Middleware to handle server side errors
+app.use((err, req, res, next) => {
+    let { statusCode = 500, message = 'Something went wrong!' } = err;
+    if (req.xhr || req.headers['content-type']?.includes('application/json') || req.headers.accept?.includes('application/json')) {
+        return res.status(statusCode).json({ success: false, message });
+    }
+    res.status(statusCode).render("error.ejs", { message });
 });
 
-//Express router basically whi h jo humne rotes folder bnake sb rotes ko unki functionality k basis p alg alg krke firr export krake use kiya,basically fucntionality yeh kuch add nhi krte but yeh code ko readable jarur bna dete h
+const server = app.listen(port, () => {
+    console.log(`🚀 RoomWati server listening at http://localhost:${port}`);
+});
+
+process.on('SIGINT', async () => {
+    if (mongoServer) {
+        await mongoServer.stop();
+    }
+    server.close(() => {
+        process.exit(0);
+    });
+});

@@ -1,1097 +1,356 @@
 const sampleListings = [
   {
-    title: "Cozy Beachfront Cottage",
-    description:
-      "Escape to this charming beachfront cottage for a relaxing getaway. Enjoy stunning ocean views and easy access to the beach.",
+    title: "Furnished Studio in HSR Layout",
+    description: "Sleek sunlit studio flat in Bangalore's tech hub with modular kitchen, 100 Mbps Wi-Fi, power backup, and dedicated work desk.",
     image: {
       filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1552733407-5d5c46c3bb3b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fHRyYXZlbHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
+      url: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=800&q=80",
     },
-    price: 1500,
-    location: "Malibu",
-    country: "United States",
-    roomType: "ensuite",
-    furnished: "furnished",
-    genderPreference: "any",
-    preferredTenants: "any",
-    immediateAvailability: true,
-    availableFrom: "2025-06-01",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: true,
-      laundry: true,
-      parking: true
-    },
-    rules: {
-      smoking: false,
-      pets: true,
-      guests: true,
-      curfew: false
-    },
-    securityDeposit: 1000,
-    minStayMonths: 1,
-    bills: {
-      included: true,
-      details: "All utilities included in the price"
-    }
-  },
-  {
-    title: "Modern Loft in Downtown",
-    description:
-      "Stay in the heart of the city in this stylish loft apartment. Perfect for urban explorers!",
-    image: {
-      filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1501785888041-af3ef285b470?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHRyYXZlbHxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
-    },
-    price: 1200,
-    location: "New York City",
-    country: "United States",
+    price: 18000,
+    location: "HSR Layout, Bangalore",
+    country: "Karnataka",
     roomType: "studio",
     furnished: "furnished",
     genderPreference: "any",
     preferredTenants: "professionals",
     immediateAvailability: true,
-    availableFrom: "2025-05-25",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: true,
-      laundry: true,
-      parking: false
-    },
-    rules: {
-      smoking: false,
-      pets: false,
-      guests: true,
-      curfew: false
-    },
-    securityDeposit: 1500,
-    minStayMonths: 3,
-    bills: {
-      included: false,
-      details: "Utilities not included. Average $150-200/month."
-    }
+    availableFrom: "2026-10-01",
+    amenities: { attachedBathroom: true, kitchenAccess: true, wifi: true, ac: true, laundry: true, parking: true },
+    rules: { smoking: false, pets: true, guests: true, curfew: false },
+    securityDeposit: 36000,
+    minStayMonths: 6,
+    bills: { included: true, details: "High-speed Wi-Fi, water, and building maintenance included." }
   },
   {
-    title: "Mountain Retreat",
-    description:
-      "Unplug and unwind in this peaceful mountain cabin. Surrounded by nature, it's a perfect place to recharge.",
+    title: "Private Room in 3BHK Flat",
+    description: "Spacious private master bedroom with attached washroom and private balcony in a gated society in Koramangala.",
     image: {
       filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1571896349842-33c89424de2d?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8aG90ZWxzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+      url: "https://images.unsplash.com/photo-1598928506311-c55ded91a20c?auto=format&fit=crop&w=800&q=80",
     },
-    price: 1000,
-    location: "Aspen",
-    country: "United States",
-    roomType: "ensuite",
-    furnished: "furnished",
-    genderPreference: "any",
-    preferredTenants: "any",
-    immediateAvailability: false,
-    availableFrom: "2025-07-15",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: false,
-      laundry: true,
-      parking: true
-    },
-    rules: {
-      smoking: false,
-      pets: true,
-      guests: true,
-      curfew: false
-    },
-    securityDeposit: 800,
-    minStayMonths: 1,
-    bills: {
-      included: true,
-      details: "Includes heating, electricity, and internet."
-    }
-  },
-  {
-    title: "Historic Villa in Tuscany",
-    description:
-      "Experience the charm of Tuscany in this beautifully restored villa. Explore the rolling hills and vineyards.",
-    image: {
-      filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8aG90ZWxzfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
-    },
-    price: 2500,
-    location: "Florence",
-    country: "Italy",
-    roomType: "ensuite",
-    furnished: "furnished",
-    genderPreference: "any",
-    preferredTenants: "family",
-    immediateAvailability: false,
-    availableFrom: "2025-06-10",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: true,
-      laundry: true,
-      parking: true
-    },
-    rules: {
-      smoking: false,
-      pets: true,
-      guests: true,
-      curfew: false
-    },
-    securityDeposit: 2000,
-    minStayMonths: 1,
-    bills: {
-      included: true,
-      details: "All utilities included. Weekly cleaning service provided."
-    }
-  },
-  {
-    title: "Secluded Treehouse Getaway",
-    description:
-      "Live among the treetops in this unique treehouse retreat. A true nature lover's paradise.",
-    image: {
-      filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGhvdGVsc3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
-    },
-    price: 800,
-    location: "Portland",
-    country: "United States",
+    price: 14500,
+    location: "Koramangala, Bangalore",
+    country: "Karnataka",
     roomType: "single",
-    furnished: "furnished",
-    genderPreference: "any",
-    preferredTenants: "any",
-    immediateAvailability: true,
-    availableFrom: "2025-05-20",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: false,
-      wifi: true,
-      ac: false,
-      laundry: false,
-      parking: true
-    },
-    rules: {
-      smoking: false,
-      pets: false,
-      guests: false,
-      curfew: false
-    },
-    securityDeposit: 500,
-    minStayMonths: 1,
-    bills: {
-      included: true,
-      details: "Eco-friendly solar power and rainwater collection system."
-    }
-  },
-  {
-    title: "Beachfront Paradise",
-    description:
-      "Step out of your door onto the sandy beach. This beachfront condo offers the ultimate relaxation.",
-    image: {
-      filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1571003123894-1f0594d2b5d9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fGhvdGVsc3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
-    },
-    price: 2000,
-    location: "Cancun",
-    country: "Mexico",
-    roomType: "ensuite",
-    furnished: "furnished",
-    genderPreference: "any",
-    preferredTenants: "any",
-    immediateAvailability: false,
-    availableFrom: "2025-08-01",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: true,
-      laundry: true,
-      parking: true
-    },
-    rules: {
-      smoking: false,
-      pets: false,
-      guests: true,
-      curfew: false
-    },
-    securityDeposit: 1500,
-    minStayMonths: 1,
-    bills: {
-      included: true,
-      details: "All utilities included. Weekly housekeeping service provided."
-    }
-  },
-  {
-    title: "Rustic Cabin by the Lake",
-    description:
-      "Spend your days fishing and kayaking on the serene lake. This cozy cabin is perfect for outdoor enthusiasts.",
-    image: {
-      filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fG1vdW50YWlufGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
-    },
-    price: 900,
-    location: "Lake Tahoe",
-    country: "United States",
-    roomType: "single",
-    furnished: "furnished",
-    genderPreference: "any",
-    preferredTenants: "any",
-    immediateAvailability: true,
-    availableFrom: "2025-05-20",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: false,
-      laundry: true,
-      parking: true
-    },
-    rules: {
-      smoking: false,
-      pets: true,
-      guests: true,
-      curfew: false
-    },
-    securityDeposit: 700,
-    minStayMonths: 1,
-    bills: {
-      included: true,
-      details: "Includes electricity, water, and internet. Free use of kayaks and fishing equipment."
-    }
-  },
-  {
-    title: "Luxury Penthouse with City Views",
-    description:
-      "Indulge in luxury living with panoramic city views from this stunning penthouse apartment.",
-    image: {
-      filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1622396481328-9b1b78cdd9fd?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8c2t5JTIwdmFjYXRpb258ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
-    },
-    price: 3500,
-    location: "Los Angeles",
-    country: "United States",
-    roomType: "ensuite",
     furnished: "furnished",
     genderPreference: "any",
     preferredTenants: "professionals",
-    immediateAvailability: false,
-    availableFrom: "2025-07-01",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: true,
-      laundry: true,
-      parking: true
-    },
-    rules: {
-      smoking: false,
-      pets: false,
-      guests: true,
-      curfew: false
-    },
-    securityDeposit: 5000,
+    immediateAvailability: true,
+    availableFrom: "2026-10-01",
+    amenities: { attachedBathroom: true, kitchenAccess: true, wifi: true, ac: true, laundry: true, parking: true },
+    rules: { smoking: false, pets: false, guests: true, curfew: false },
+    securityDeposit: 25000,
     minStayMonths: 3,
-    bills: {
-      included: false,
-      details: "Utilities not included. Building amenities include gym, pool, and 24-hour doorman."
-    }
+    bills: { included: true, details: "Wi-Fi and maid service split equally." }
   },
   {
-    title: "Ski-In/Ski-Out Chalet",
-    description:
-      "Hit the slopes right from your doorstep in this ski-in/ski-out chalet in the Swiss Alps.",
+    title: "Luxury 2BHK Apartment for Rent",
+    description: "Modern 2BHK flat with wooden flooring, smart TV, modular kitchen, swimming pool access, and covered car parking in Bandra.",
     image: {
       filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1502784444187-359ac186c5bb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fHNreSUyMHZhY2F0aW9ufGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+      url: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=800&q=80",
     },
-    price: 3000,
-    location: "Verbier",
-    country: "Switzerland",
-    roomType: "ensuite",
+    price: 45000,
+    location: "Bandra West, Mumbai",
+    country: "Maharashtra",
+    roomType: "entire_apartment",
     furnished: "furnished",
     genderPreference: "any",
-    preferredTenants: "any",
-    immediateAvailability: false,
-    availableFrom: "2025-11-15",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: false,
-      laundry: true,
-      parking: true
-    },
-    rules: {
-      smoking: false,
-      pets: false,
-      guests: true,
-      curfew: false
-    },
-    securityDeposit: 3000,
-    minStayMonths: 1,
-    bills: {
-      included: true,
-      details: "All utilities included. Includes daily housekeeping and ski storage."
-    }
-  },
-  {
-    title: "Safari Lodge in the Serengeti",
-    description:
-      "Experience the thrill of the wild in a comfortable safari lodge. Witness the Great Migration up close.",
-    image: {
-      filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mjl8fG1vdW50YWlufGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
-    },
-    price: 4000,
-    location: "Serengeti National Park",
-    country: "Tanzania",
-    roomType: "ensuite",
-    furnished: "furnished",
-    genderPreference: "any",
-    preferredTenants: "any",
+    preferredTenants: "family",
     immediateAvailability: true,
-    availableFrom: "2025-05-20",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: true,
-      laundry: true,
-      parking: true
-    },
-    rules: {
-      smoking: false,
-      pets: false,
-      guests: false,
-      curfew: true,
-      curfewDetails: "No outdoor activities after sunset for safety reasons"
-    },
-    securityDeposit: 2000,
-    minStayMonths: 1,
-    bills: {
-      included: true,
-      details: "All-inclusive package with meals, guided safari tours, and airport transfers."
-    }
+    availableFrom: "2026-10-01",
+    amenities: { attachedBathroom: true, kitchenAccess: true, wifi: true, ac: true, laundry: true, parking: true },
+    rules: { smoking: false, pets: true, guests: true, curfew: false },
+    securityDeposit: 90000,
+    minStayMonths: 11,
+    bills: { included: false, details: "Electricity and gas as per meter reading." }
   },
   {
-    title: "Historic Canal House",
-    description:
-      "Stay in a piece of history in this beautifully preserved canal house in Amsterdam's iconic district.",
+    title: "Shared Student Room near Campus",
+    description: "Twin-sharing fully furnished room for students near North Campus with 3 times food, daily housekeeping, and zero brokerage.",
     image: {
       filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1504280390367-361c6d9f38f4?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8Y2FtcGluZ3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
+      url: "https://images.unsplash.com/photo-1555854877-bab0e564b8d5?auto=format&fit=crop&w=800&q=80",
     },
-    price: 1800,
-    location: "Amsterdam",
-    country: "Netherlands",
-    roomType: "shared",
-    furnished: "furnished",
-    genderPreference: "any",
-    preferredTenants: "any",
-    immediateAvailability: false,
-    availableFrom: "2025-09-01",
-    amenities: {
-      attachedBathroom: false,
-      kitchenAccess: true,
-      wifi: true,
-      ac: false,
-      laundry: true,
-      parking: false
-    },
-    rules: {
-      smoking: false,
-      pets: false,
-      guests: true,
-      curfew: false
-    },
-    securityDeposit: 1500,
-    minStayMonths: 1,
-    bills: {
-      included: true,
-      details: "All utilities included. Bicycles available for guests."
-    }
-  },
-  {
-    title: "Private Island Retreat",
-    description:
-      "Have an entire island to yourself for a truly exclusive and unforgettable vacation experience.",
-    image: {
-      filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1618140052121-39fc6db33972?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8bG9kZ2V8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
-    },
-    price: 10000,
-    location: "Fiji",
-    country: "Fiji",
-    roomType: "ensuite",
-    furnished: "unfurnished",
-    genderPreference: "any",
-    preferredTenants: "any",
-    immediateAvailability: false,
-    availableFrom: "2025-06-15",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: true,
-      laundry: true,
-      parking: true
-    },
-    rules: {
-      smoking: true,
-      pets: false,
-      guests: true,
-      curfew: false
-    },
-    securityDeposit: 5000,
-    minStayMonths: 1,
-    bills: {
-      included: true,
-      details: "All-inclusive with private chef, boat transfers, and water activities."
-    }
-  },
-  {
-    title: "Charming Cottage in the Cotswolds",
-    description:
-      "Escape to the picturesque Cotswolds in this quaint and charming cottage with a thatched roof.",
-    image: {
-      filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1602088113235-229c19758e9f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8N3x8YmVhY2glMjB2YWNhdGlvbnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=800&q=60",
-    },
-    price: 1200,
-    location: "Cotswolds",
-    country: "United Kingdom",
-    roomType: "ensuite",
-    furnished: "furnished",
-    genderPreference: "any",
-    preferredTenants: "any",
-    immediateAvailability: true,
-    availableFrom: "2025-05-20",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: false,
-      laundry: true,
-      parking: true
-    },
-    rules: {
-      smoking: false,
-      pets: true,
-      guests: true,
-      curfew: false
-    },
-    securityDeposit: 1000,
-    minStayMonths: 1,
-    bills: {
-      included: true,
-      details: "All utilities included. Gardener visits weekly."
-    }
-  },
-  {
-    title: "Historic Brownstone in Boston",
-    description:
-      "Step back in time in this elegant historic brownstone located in the heart of Boston.",
-    image: {
-      filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1533619239233-6280475a633a?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTR8fHNreSUyMHZhY2F0aW9ufGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
-    },
-    price: 2200,
-    location: "Boston",
-    country: "United States",
+    price: 8500,
+    location: "North Campus, Delhi",
+    country: "Delhi NCR",
     roomType: "shared",
     furnished: "furnished",
     genderPreference: "any",
     preferredTenants: "students",
-    immediateAvailability: false,
-    availableFrom: "2025-09-01",
-    amenities: {
-      attachedBathroom: false,
-      kitchenAccess: true,
-      wifi: true,
-      ac: true,
-      laundry: true,
-      parking: false
-    },
-    rules: {
-      smoking: false,
-      pets: false,
-      guests: true,
-      curfew: false
-    },
-    securityDeposit: 2000,
-    minStayMonths: 4,
-    bills: {
-      included: false,
-      details: "Utilities split among roommates, typically $75-100 per person monthly."
-    }
-  },
-  {
-    title: "Beachfront Bungalow in Bali",
-    description:
-      "Relax on the sandy shores of Bali in this beautiful beachfront bungalow with a private pool.",
-    image: {
-      filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1602391833977-358a52198938?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MzJ8fGNhbXBpbmd8ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
-    },
-    price: 1800,
-    location: "Bali",
-    country: "Indonesia",
-    roomType: "ensuite",
-    furnished: "unfurnished",
-    genderPreference: "any",
-    preferredTenants: "any",
     immediateAvailability: true,
-    availableFrom: "2025-05-20",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: true,
-      laundry: true,
-      parking: true
-    },
-    rules: {
-      smoking: true,
-      pets: false,
-      guests: true,
-      curfew: false
-    },
-    securityDeposit: 1000,
-    minStayMonths: 1,
-    bills: {
-      included: true,
-      details: "All utilities included. Daily housekeeping and breakfast provided."
-    }
+    availableFrom: "2026-10-01",
+    amenities: { attachedBathroom: true, kitchenAccess: true, wifi: true, ac: true, laundry: true, parking: false },
+    rules: { smoking: false, pets: false, guests: false, curfew: true },
+    securityDeposit: 8500,
+    minStayMonths: 6,
+    bills: { included: true, details: "Food, Wi-Fi, electricity and water all included." }
   },
   {
-    title: "Mountain View Cabin in Banff",
-    description:
-      "Enjoy breathtaking mountain views from this cozy cabin in the Canadian Rockies.",
+    title: "Executive 1BHK in Cyber City",
+    description: "Chic 1BHK apartment walking distance from DLF Cyber Hub. Fitted with high-end appliances, gym access, and 24/7 security.",
     image: {
       filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1521401830884-6c03c1c87ebb?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGxvZGdlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+      url: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=800&q=80",
     },
-    price: 1500,
-    location: "Banff",
-    country: "Canada",
-    roomType: "ensuite",
-    furnished: "furnished",
-    genderPreference: "any",
-    preferredTenants: "any",
-    immediateAvailability: false,
-    availableFrom: "2025-06-15",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: false,
-      laundry: true,
-      parking: true
-    },
-    rules: {
-      smoking: false,
-      pets: false,
-      guests: true,
-      curfew: false
-    },
-    securityDeposit: 1000,
-    minStayMonths: 1,
-    bills: {
-      included: true,
-      details: "All utilities included. Wood for fireplace provided."
-    }
-  },
-  {
-    title: "Art Deco Apartment in Miami",
-    description:
-      "Step into the glamour of the 1920s in this stylish Art Deco apartment in South Beach.",
-    image: {
-      filename: "listingimage",
-      url: "https://plus.unsplash.com/premium_photo-1670963964797-942df1804579?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTZ8fGxvZGdlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
-    },
-    price: 1600,
-    location: "Miami",
-    country: "United States",
+    price: 28000,
+    location: "Cyber City, Gurgaon",
+    country: "Haryana",
     roomType: "studio",
     furnished: "furnished",
     genderPreference: "any",
-    preferredTenants: "any",
+    preferredTenants: "professionals",
     immediateAvailability: true,
-    availableFrom: "2025-05-20",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: true,
-      laundry: true,
-      parking: false
-    },
-    rules: {
-      smoking: false,
-      pets: true,
-      guests: true,
-      curfew: false
-    },
-    securityDeposit: 1500,
-    minStayMonths: 2,
-    bills: {
-      included: false,
-      details: "Electricity and water not included. Internet included."
-    }
+    availableFrom: "2026-10-01",
+    amenities: { attachedBathroom: true, kitchenAccess: true, wifi: true, ac: true, laundry: true, parking: true },
+    rules: { smoking: false, pets: false, guests: true, curfew: false },
+    securityDeposit: 56000,
+    minStayMonths: 6,
+    bills: { included: true, details: "Wi-Fi and society maintenance included." }
   },
   {
-    title: "Tropical Villa in Phuket",
-    description:
-      "Escape to a tropical paradise in this luxurious villa with a private infinity pool in Phuket.",
+    title: "Cozy Single Room in Indiranagar",
+    description: "Private single room in a peaceful residential street in Indiranagar. Steps away from metro, cafes, and 100ft Road.",
     image: {
       filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1470165301023-58dab8118cc9?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGxvZGdlfGVufDB8fDB8fHww&auto=format&fit=crop&w=800&q=60",
+      url: "https://images.unsplash.com/photo-1540518614846-7ede433c4ef2?auto=format&fit=crop&w=800&q=80",
     },
-    price: 3000,
-    location: "Phuket",
-    country: "Thailand",
-    roomType: "ensuite",
-    furnished: "unfurnished",
-    genderPreference: "any",
-    preferredTenants: "any",
-    immediateAvailability: false,
-    availableFrom: "2025-07-01",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: true,
-      laundry: true,
-      parking: true
-    },
-    rules: {
-      smoking: true,
-      pets: false,
-      guests: true,
-      curfew: false
-    },
-    securityDeposit: 2000,
-    minStayMonths: 1,
-    bills: {
-      included: true,
-      details: "All utilities included. Daily housekeeping service provided."
-    }
-  },
-  {
-    title: "Historic Castle in Scotland",
-    description:
-      "Live like royalty in this historic castle in the Scottish Highlands. Explore the rugged beauty of the area.",
-    image: {
-      filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1585543805890-6051f7829f98?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTl8fGJlYWNoJTIwdmFjYXRpb258ZW58MHx8MHx8fDA%3D&auto=format&fit=crop&w=800&q=60",
-    },
-    price: 4000,
-    location: "Scottish Highlands",
-    country: "United Kingdom",
-    roomType: "ensuite",
-    furnished: "furnished",
-    genderPreference: "any",
-    preferredTenants: "any",
-    immediateAvailability: false,
-    availableFrom: "2025-08-01",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: false,
-      laundry: true,
-      parking: true
-    },
-    rules: {
-      smoking: false,
-      pets: false,
-      guests: true,
-      curfew: false
-    },
-    securityDeposit: 3000,
-    minStayMonths: 1,
-    bills: {
-      included: true,
-      details: "All utilities included. Daily housekeeping and breakfast provided."
-    }
-  },
-  {
-    title: "Desert Oasis in Dubai",
-    description: "Experience luxury in the middle of the desert in this opulent oasis in Dubai with a private pool.",
-    image: {
-      filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1518684079-3c830dcef090?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60",
-    },
-    price: 5000,
-    location: "Dubai",
-    country: "United Arab Emirates",
-    roomType: "ensuite",
-    furnished: "furnished",
-    genderPreference: "any",
-    preferredTenants: "any",
-    immediateAvailability: true,
-    availableFrom: "2025-05-01",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: true,
-      laundry: true,
-      parking: true,
-    },
-    rules: {
-      smoking: false,
-      pets: false,
-      guests: true,
-      curfew: false,
-    },
-    securityDeposit: 3000,
-    minStayMonths: 2,
-    bills: {
-      included: true,
-      details: "Utilities and maintenance covered. Weekly pool cleaning included.",
-    },
-  },
-  {
-    title: "Rustic Log Cabin in Montana",
-    description: "Unplug and unwind in this cozy log cabin surrounded by the natural beauty of Montana.",
-    image: {
-      filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1586375300773-8384e3e4916f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60",
-    },
-    price: 1100,
-    location: "Montana",
-    country: "United States",
+    price: 13000,
+    location: "Indiranagar, Bangalore",
+    country: "Karnataka",
     roomType: "single",
-    furnished: "semifurnished",
+    furnished: "furnished",
     genderPreference: "any",
-    preferredTenants: "students",
-    immediateAvailability: false,
-    availableFrom: "2025-08-15",
-    amenities: {
-      attachedBathroom: false,
-      kitchenAccess: true,
-      wifi: false,
-      ac: false,
-      laundry: true,
-      parking: true,
-    },
-    rules: {
-      smoking: true,
-      pets: true,
-      guests: false,
-      curfew: true,
-    },
-    securityDeposit: 800,
+    preferredTenants: "professionals",
+    immediateAvailability: true,
+    availableFrom: "2026-10-01",
+    amenities: { attachedBathroom: true, kitchenAccess: true, wifi: true, ac: false, laundry: true, parking: true },
+    rules: { smoking: false, pets: true, guests: true, curfew: false },
+    securityDeposit: 26000,
     minStayMonths: 3,
-    bills: {
-      included: false,
-      details: "Electricity not included. Firewood and water included.",
-    },
+    bills: { included: true, details: "High-speed fiber internet and water included." }
   },
   {
-    title: "Beachfront Villa in Greece",
-    description: "Enjoy the crystal-clear waters of the Mediterranean in this beautiful beachfront villa on a Greek island.",
+    title: "Gated Society 3BHK Flat in Gachibowli",
+    description: "Spacious 3BHK flat in a premium high-rise society in Hyderabad's Financial District with clubhouse, tennis court, and security.",
     image: {
       filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1602343168117-bb8ffe3e2e9f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60",
+      url: "https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80",
     },
-    price: 2500,
-    location: "Mykonos",
-    country: "Greece",
+    price: 38000,
+    location: "Gachibowli, Hyderabad",
+    country: "Telangana",
+    roomType: "entire_apartment",
+    furnished: "semi-furnished",
+    genderPreference: "any",
+    preferredTenants: "family",
+    immediateAvailability: true,
+    availableFrom: "2026-10-15",
+    amenities: { attachedBathroom: true, kitchenAccess: true, wifi: true, ac: true, laundry: true, parking: true },
+    rules: { smoking: false, pets: true, guests: true, curfew: false },
+    securityDeposit: 76000,
+    minStayMonths: 11,
+    bills: { included: false, details: "Maintenance ₹3,500/month." }
+  },
+  {
+    title: "Modern Co-living Studio in Hinjawadi",
+    description: "Hassle-free managed studio room near Hinjawadi IT Park Phase 1. Includes daily breakfast, weekly cleaning, and gaming lounge.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 15500,
+    location: "Hinjawadi, Pune",
+    country: "Maharashtra",
+    roomType: "studio",
+    furnished: "furnished",
+    genderPreference: "any",
+    preferredTenants: "professionals",
+    immediateAvailability: true,
+    availableFrom: "2026-10-01",
+    amenities: { attachedBathroom: true, kitchenAccess: true, wifi: true, ac: true, laundry: true, parking: true },
+    rules: { smoking: false, pets: false, guests: true, curfew: false },
+    securityDeposit: 15500,
+    minStayMonths: 1,
+    bills: { included: true, details: "All bills, electricity up to 100 units, and meals included." }
+  },
+  {
+    title: "Sunlit Master Bedroom in Powai",
+    description: "Ensuite private master room with lake views in Hiranandani Powai. Fully furnished with king bed, wardrobe, and attached bathroom.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1616594039964-ae9021a400a0?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 22000,
+    location: "Powai, Mumbai",
+    country: "Maharashtra",
     roomType: "ensuite",
     furnished: "furnished",
     genderPreference: "any",
     preferredTenants: "professionals",
-    immediateAvailability: false,
-    availableFrom: "2025-06-01",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: true,
-      laundry: true,
-      parking: false,
-    },
-    rules: {
-      smoking: false,
-      pets: false,
-      guests: true,
-      curfew: false,
-    },
-    securityDeposit: 1500,
-    minStayMonths: 1,
-    bills: {
-      included: true,
-      details: "Wi-Fi and electricity included. No housekeeping.",
-    },
+    immediateAvailability: true,
+    availableFrom: "2026-10-01",
+    amenities: { attachedBathroom: true, kitchenAccess: true, wifi: true, ac: true, laundry: true, parking: true },
+    rules: { smoking: false, pets: false, guests: true, curfew: false },
+    securityDeposit: 44000,
+    minStayMonths: 6,
+    bills: { included: true, details: "Society maintenance and high-speed Wi-Fi included." }
   },
   {
-    title: "Eco-Friendly Treehouse Retreat",
-    description: "Stay in an eco-friendly treehouse nestled in the forest. It's the perfect escape for nature lovers.",
+    title: "Furnished 1BHK Flat near OMR",
+    description: "Independent 1BHK flat close to Sholinganallur junction. Ideal for IT employees seeking quick commute and quiet neighborhood.",
     image: {
       filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1488462237308-ecaa28b729d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60",
+      url: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=800&q=80",
     },
-    price: 750,
-    location: "Costa Rica",
-    country: "Costa Rica",
-    roomType: "shared",
+    price: 16000,
+    location: "OMR, Chennai",
+    country: "Tamil Nadu",
+    roomType: "entire_apartment",
+    furnished: "furnished",
+    genderPreference: "any",
+    preferredTenants: "any",
+    immediateAvailability: true,
+    availableFrom: "2026-10-01",
+    amenities: { attachedBathroom: true, kitchenAccess: true, wifi: true, ac: true, laundry: true, parking: true },
+    rules: { smoking: false, pets: true, guests: true, curfew: false },
+    securityDeposit: 32000,
+    minStayMonths: 6,
+    bills: { included: true, details: "Water and building maintenance included." }
+  },
+  {
+    title: "Spacious Private Room in Viman Nagar",
+    description: "Well-ventilated private room in a modern 3BHK flat near Symbiosis College and Pune Airport. Walking distance to Phoenix Marketcity.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1595526114035-0d45ed16cfbf?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 12500,
+    location: "Viman Nagar, Pune",
+    country: "Maharashtra",
+    roomType: "single",
+    furnished: "furnished",
+    genderPreference: "any",
+    preferredTenants: "any",
+    immediateAvailability: true,
+    availableFrom: "2026-10-01",
+    amenities: { attachedBathroom: true, kitchenAccess: true, wifi: true, ac: true, laundry: true, parking: true },
+    rules: { smoking: false, pets: true, guests: true, curfew: false },
+    securityDeposit: 20000,
+    minStayMonths: 3,
+    bills: { included: true, details: "Wi-Fi and water bills included." }
+  },
+  {
+    title: "Minimalist Studio near Sector 62",
+    description: "Compact, well-designed 1RK studio apartment with kitchen setup and separate work corner. Perfect for single professionals.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1493809842364-78817add7ffb?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 14000,
+    location: "Sector 62, Noida",
+    country: "Uttar Pradesh",
+    roomType: "studio",
+    furnished: "furnished",
+    genderPreference: "any",
+    preferredTenants: "professionals",
+    immediateAvailability: true,
+    availableFrom: "2026-10-01",
+    amenities: { attachedBathroom: true, kitchenAccess: true, wifi: true, ac: true, laundry: true, parking: true },
+    rules: { smoking: false, pets: false, guests: true, curfew: false },
+    securityDeposit: 20000,
+    minStayMonths: 3,
+    bills: { included: true, details: "Building maintenance and Wi-Fi included." }
+  },
+  {
+    title: "Designer 2BHK Flat in Whitefield",
+    description: "Spacious 2BHK with wooden accents, modular island kitchen, and balcony overlooking lush green community gardens near ITPL.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?auto=format&fit=crop&w=800&q=80",
+    },
+    price: 32000,
+    location: "Whitefield, Bangalore",
+    country: "Karnataka",
+    roomType: "entire_apartment",
     furnished: "furnished",
     genderPreference: "any",
     preferredTenants: "family",
     immediateAvailability: true,
-    availableFrom: "2025-05-01",
-    amenities: {
-      attachedBathroom: false,
-      kitchenAccess: true,
-      wifi: true,
-      ac: false,
-      laundry: false,
-      parking: false,
-    },
-    rules: {
-      smoking: false,
-      pets: true,
-      guests: false,
-      curfew: true,
-    },
-    securityDeposit: 500,
-    minStayMonths: 1,
-    bills: {
-      included: true,
-      details: "Basic utilities included. Eco-friendly stay guidelines must be followed.",
-    },
+    availableFrom: "2026-10-01",
+    amenities: { attachedBathroom: true, kitchenAccess: true, wifi: true, ac: true, laundry: true, parking: true },
+    rules: { smoking: false, pets: true, guests: true, curfew: false },
+    securityDeposit: 64000,
+    minStayMonths: 11,
+    bills: { included: false, details: "Electricity as per BESCOM meter." }
   },
   {
-    title: "Historic Cottage in Charleston",
-    description: "Experience the charm of historic Charleston in this beautifully restored cottage with a private garden.",
+    title: "Cozy Furnished Room in South Extension",
+    description: "Centrally located single private room in South Extension Part 2. Easy access to AIIMS, Metro Pink Line, and market amenities.",
     image: {
       filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1587381420270-3e1a5b9e6904?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60",
+      url: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?auto=format&fit=crop&w=800&q=80",
     },
-    price: 1600,
-    location: "Charleston",
-    country: "United States",
+    price: 15000,
+    location: "South Extension, Delhi",
+    country: "Delhi NCR",
     roomType: "single",
     furnished: "furnished",
     genderPreference: "female",
-    preferredTenants: "any",
-    immediateAvailability: false,
-    availableFrom: "2025-09-01",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: true,
-      laundry: true,
-      parking: true,
-    },
-    rules: {
-      smoking: false,
-      pets: false,
-      guests: true,
-      curfew: true,
-    },
-    securityDeposit: 1000,
-    minStayMonths: 2,
-    bills: {
-      included: true,
-      details: "All utilities included. Garden maintenance is handled weekly.",
-    },
-  },
-  {
-    title: "Modern Apartment in Tokyo",
-    description: "Explore the vibrant city of Tokyo from this modern and centrally located apartment.",
-    image: {
-      filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1480796927426-f609979314bd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60",
-    },
-    price: 2000,
-    location: "Tokyo",
-    country: "Japan",
-    roomType: "ensuite",
-    furnished: "semifurnished",
-    genderPreference: "any",
     preferredTenants: "students",
     immediateAvailability: true,
-    availableFrom: "2025-05-01",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: true,
-      laundry: false,
-      parking: false,
+    availableFrom: "2026-10-01",
+    amenities: { attachedBathroom: true, kitchenAccess: true, wifi: true, ac: true, laundry: true, parking: false },
+    rules: { smoking: false, pets: false, guests: false, curfew: true },
+    securityDeposit: 15000,
+    minStayMonths: 6,
+    bills: { included: true, details: "High-speed Wi-Fi and water bills included." }
+  },
+  {
+    title: "Modern Loft Studio in C-Scheme",
+    description: "Aesthetic loft studio with exposed brick walls, smart study desk, and rooftop cafe access in the heart of Jaipur.",
+    image: {
+      filename: "listingimage",
+      url: "https://images.unsplash.com/photo-1536376072261-38c75010e6c9?auto=format&fit=crop&w=800&q=80",
     },
-    rules: {
-      smoking: false,
-      pets: false,
-      guests: false,
-      curfew: true,
-    },
-    securityDeposit: 1200,
+    price: 16500,
+    location: "C-Scheme, Jaipur",
+    country: "Rajasthan",
+    roomType: "studio",
+    furnished: "furnished",
+    genderPreference: "any",
+    preferredTenants: "any",
+    immediateAvailability: true,
+    availableFrom: "2026-10-01",
+    amenities: { attachedBathroom: true, kitchenAccess: true, wifi: true, ac: true, laundry: true, parking: true },
+    rules: { smoking: false, pets: true, guests: true, curfew: false },
+    securityDeposit: 25000,
     minStayMonths: 3,
-    bills: {
-      included: false,
-      details: "Internet and gas bills to be paid separately.",
-    },
+    bills: { included: true, details: "Water, Wi-Fi, and housekeeping included." }
   },
   {
-    title: "Lakefront Cabin in New Hampshire",
-    description: "Spend your days by the lake in this cozy cabin in the scenic White Mountains of New Hampshire.",
+    title: "Luxury Gated Society 2BHK in Andheri",
+    description: "Well-appointed 2BHK flat in Lokhandwala Complex with gym, 2 covered parking slots, and round-the-clock CCTV surveillance.",
     image: {
       filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1578645510447-e20b4311e3ce?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60",
+      url: "https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=800&q=80",
     },
-    price: 1200,
-    location: "New Hampshire",
-    country: "United States",
-    roomType: "single",
+    price: 52000,
+    location: "Andheri West, Mumbai",
+    country: "Maharashtra",
+    roomType: "entire_apartment",
     furnished: "furnished",
     genderPreference: "any",
-    preferredTenants: "couples",
-    immediateAvailability: false,
-    availableFrom: "2025-10-01",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: false,
-      ac: false,
-      laundry: true,
-      parking: true,
-    },
-    rules: {
-      smoking: true,
-      pets: false,
-      guests: true,
-      curfew: false,
-    },
-    securityDeposit: 900,
-    minStayMonths: 2,
-    bills: {
-      included: true,
-      details: "Water and electricity included. No Wi-Fi available.",
-    },
-  },
-  {
-    title: "Luxury Villa in the Maldives",
-    description: "Indulge in luxury in this overwater villa in the Maldives with stunning views of the Indian Ocean.",
-    image: {
-      filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1439066615861-d1af74d74000?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60",
-    },
-    price: 6000,
-    location: "Maldives",
-    country: "Maldives",
-    roomType: "ensuite",
-    furnished: "furnished",
-    genderPreference: "any",
-    preferredTenants: "any",
+    preferredTenants: "professionals",
     immediateAvailability: true,
-    availableFrom: "2025-05-01",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: false,
-      wifi: true,
-      ac: true,
-      laundry: true,
-      parking: false,
-    },
-    rules: {
-      smoking: false,
-      pets: false,
-      guests: false,
-      curfew: false,
-    },
-    securityDeposit: 4000,
-    minStayMonths: 1,
-    bills: {
-      included: true,
-      details: "Full luxury service including meals, spa, and concierge.",
-    },
-  },
-  {
-    title: "Ski Chalet in Aspen",
-    description: "Hit the slopes in style with this luxurious ski chalet in the world-famous Aspen ski resort.",
-    image: {
-      filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60",
-    },
-    price: 4000,
-    location: "Aspen",
-    country: "United States",
-    roomType: "ensuite",
-    furnished: "unfurnished",
-    genderPreference: "any",
-    preferredTenants: "any",
-    immediateAvailability: false,
-    availableFrom: "2025-11-01",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: true,
-      laundry: true,
-      parking: true,
-    },
-    rules: {
-      smoking: false,
-      pets: false,
-      guests: true,
-      curfew: false,
-    },
-    securityDeposit: 2500,
-    minStayMonths: 1,
-    bills: {
-      included: true,
-      details: "All bills and firewood included. Snow clearing service available.",
-    },
-  },
-  {
-    title: "Secluded Beach House in Costa Rica",
-    description: "Escape to a secluded beach house on the Pacific coast of Costa Rica. Surf, relax, and unwind.",
-    image: {
-      filename: "listingimage",
-      url: "https://images.unsplash.com/photo-1499793983690-e29da59ef1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60",
-    },
-    price: 1800,
-    location: "Costa Rica",
-    country: "Costa Rica",
-    roomType: "ensuite",
-    furnished: "semifurnished",
-    genderPreference: "any",
-    preferredTenants: "family",
-    immediateAvailability: true,
-    availableFrom: "2025-05-01",
-    amenities: {
-      attachedBathroom: true,
-      kitchenAccess: true,
-      wifi: true,
-      ac: false,
-      laundry: false,
-      parking: true,
-    },
-    rules: {
-      smoking: true,
-      pets: true,
-      guests: true,
-      curfew: false,
-    },
-    securityDeposit: 1000,
-    minStayMonths: 1,
-    bills: {
-      included: false,
-      details: "Internet included. Electricity and water bills extra.",
-    },
-  },
+    availableFrom: "2026-10-01",
+    amenities: { attachedBathroom: true, kitchenAccess: true, wifi: true, ac: true, laundry: true, parking: true },
+    rules: { smoking: false, pets: false, guests: true, curfew: false },
+    securityDeposit: 100000,
+    minStayMonths: 11,
+    bills: { included: false, details: "Society maintenance ₹4,000/month." }
+  }
 ];
 
 module.exports = { data: sampleListings };

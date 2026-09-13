@@ -429,12 +429,12 @@
             <% } %>
             <!-- End 5-Star Badge -->
             <button
-              class="favorite-btn <%= currUser && currUser.favorites && currUser.favorites.includes(listing._id.toString()) ? 'active' : '' %>"
+              class="favorite-btn <%= listing.isFavorite ? 'active' : '' %>"
               aria-label="Toggle favorites"
               data-listing-id="<%= listing._id %>"
             >
               <i
-                class="<%= currUser && currUser.favorites && currUser.favorites.includes(listing._id.toString()) ? 'fas' : 'far' %> fa-heart"
+                class="<%= listing.isFavorite ? 'fas' : 'far' %> fa-heart"
               ></i>
             </button>
           </div>

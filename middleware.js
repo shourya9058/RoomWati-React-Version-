@@ -4,29 +4,27 @@ const ExpressError = require("./utils/ExpressError.js");
 const {ListingSchema, reviewSchema} = require("./schema.js");
 
 
-module.exports.isLoggedIn = (req,res,next) =>{
-    if(!req.isAuthenticated()){
-        // Save the full URL for redirection
-        req.session.returnTo = req.originalUrl;
-        req.flash("error","Please login to continue"); 
+module.exports.isLoggedIn = (req, res, next) => {
+    if (!req.isAuthenticated()) {
+        if (req.xhr || req.headers['content-type']?.includes('application/json') || req.headers.accept?.includes('application/json') || req.method !== 'GET') {
+            return res.status(401).json({ error: "Please login to continue" });
+        }
+        if (req.method === 'GET' && !req.originalUrl.includes('toggle-favorite') && !req.originalUrl.includes('auth') && req.originalUrl !== '/login' && req.originalUrl !== '/signup') {
+            req.session.returnTo = req.originalUrl;
+        }
+        req.flash("error", "Please login to continue"); 
         return res.redirect("/login");
     }
     next();
 };
 
 module.exports.saveRedirectUrl = (req, res, next) => {
-    if (req.session.returnTo) {
-        res.locals.returnTo = req.session.returnTo;
-    } else if (req.query.returnTo) {
-        // Handle returnTo from query parameters if needed
-        res.locals.returnTo = req.query.returnTo;
-        req.session.returnTo = req.query.returnTo;
-    } else if (req.originalUrl && req.originalUrl !== '/login' && req.originalUrl !== '/signup') {
-        // Only save the URL if it's not a login or signup page
-        req.session.returnTo = req.originalUrl;
-        res.locals.returnTo = req.originalUrl;
+    let returnUrl = req.session.returnTo || req.query.returnTo;
+    if (returnUrl && (returnUrl.includes('toggle-favorite') || returnUrl.includes('verify') || returnUrl === '/login' || returnUrl === '/signup')) {
+        returnUrl = '/listings';
     }
-    console.log('saveRedirectUrl - returnTo:', res.locals.returnTo);
+    res.locals.returnTo = returnUrl || '/listings';
+    req.session.returnTo = res.locals.returnTo;
     next();
 };
 

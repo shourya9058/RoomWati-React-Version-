@@ -1,11 +1,14 @@
 {
   "engines": {
-    "node": "22.7.0"
+    "node": ">=20.0.0"
   },
   "name": "majorproject1",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "app.js",
   "scripts": {
+    "start": "node app.js",
+    "dev": "node --watch app.js",
+    "seed": "node init/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
@@ -17,7 +20,9 @@
     "@emailjs/nodejs": "^5.0.2",
     "cloudinary": "^1.41.3",
     "connect-flash": "^0.1.1",
+    "connect-mongo": "^6.0.0",
     "cookie-parser": "^1.4.7",
+    "cors": "^2.8.6",
     "crypto": "^1.0.1",
     "dotenv": "^16.5.0",
     "ejs": "^3.1.10",
@@ -36,5 +41,8 @@
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "passport-local-mongoose": "^8.0.0"
+  },
+  "devDependencies": {
+    "mongodb-memory-server": "^11.2.0"
   }
 }
