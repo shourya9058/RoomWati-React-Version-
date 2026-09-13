@@ -29,12 +29,13 @@ import {
   MessageCircle,
   X
 } from 'lucide-react';
-import api from '../services/api';
-import { useAuth } from '../context/AuthContext';
 import { useToast } from '../context/ToastContext';
-import { useNotifications } from '../context/NotificationContext';
-import { useChat } from '../context/ChatContext';
+import { useAuth } from '../context/AuthContext';
 import { useVisits } from '../context/VisitContext';
+import { useNotifications } from '../context/NotificationContext';
+import api from '../services/api';
+import DeleteConfirmModal from '../components/common/DeleteConfirmModal';
+import { useChat } from '../context/ChatContext';
 import Avatar from '../components/common/Avatar';
 
 export default function ListingDetail() {
@@ -59,6 +60,8 @@ export default function ListingDetail() {
   // Favorite & Delete state
   const [favLoading, setFavLoading] = useState(false);
   const [deleteLoading, setDeleteLoading] = useState(false);
+  const [deleteListingModalOpen, setDeleteListingModalOpen] = useState(false);
+  const [deleteReviewModalState, setDeleteReviewModalState] = useState({ isOpen: false, reviewId: null, loading: false });
 
   // Visit Scheduling Modal
   const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
@@ -233,26 +236,34 @@ export default function ListingDetail() {
     }
   };
 
-  const handleDeleteReview = async (reviewId) => {
-    if (!window.confirm('Are you sure you want to delete this review?')) return;
+  const handleDeleteReview = (reviewId) => {
+    setDeleteReviewModalState({ isOpen: true, reviewId, loading: false });
+  };
+
+  const confirmDeleteReview = async () => {
+    const reviewId = deleteReviewModalState.reviewId;
+    if (!reviewId) return;
     try {
+      setDeleteReviewModalState(prev => ({ ...prev, loading: true }));
       await api.deleteReview(id, reviewId);
       setListing(prev => ({
         ...prev,
         reviews: prev.reviews.filter(r => (r._id || r.id) !== reviewId)
       }));
       toast.info('Review Deleted', 'Your review was removed from this listing.');
+      setDeleteReviewModalState({ isOpen: false, reviewId: null, loading: false });
     } catch (err) {
       toast.error('Error', err.message || 'Failed to delete review');
+      setDeleteReviewModalState(prev => ({ ...prev, loading: false }));
     }
   };
 
-  const handleDeleteListing = async () => {
-    if (!window.confirm('Are you sure you want to permanently delete this listing?')) return;
+  const confirmDeleteListing = async () => {
     try {
       setDeleteLoading(true);
       await api.deleteListing(id);
       toast.success('Listing Removed', 'Your property was removed from RoomWati.');
+      setDeleteListingModalOpen(false);
       navigate('/listings');
     } catch (err) {
       toast.error('Error', err.message || 'Failed to delete listing');
@@ -722,7 +733,7 @@ export default function ListingDetail() {
                       <span>Edit Room</span>
                     </Link>
                     <button
-                      onClick={handleDeleteListing}
+                      onClick={() => setDeleteListingModalOpen(true)}
                       disabled={deleteLoading}
                       className="py-2.5 px-3 rounded-xl bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors disabled:opacity-50"
                     >
@@ -858,6 +869,31 @@ export default function ListingDetail() {
           </div>
         </div>
       )}
+
+      {/* Delete Listing Confirmation Modal */}
+      <DeleteConfirmModal
+        isOpen={deleteListingModalOpen}
+        onClose={() => setDeleteListingModalOpen(false)}
+        onConfirm={confirmDeleteListing}
+        title="Delete Listing?"
+        itemName={listing.title}
+        itemType="property listing"
+        message="Are you sure you want to permanently delete this listing from RoomWati? This will remove all photos, reviews, and inquiries associated with this property."
+        confirmText="Yes, Delete Listing"
+        loading={deleteLoading}
+      />
+
+      {/* Delete Review Confirmation Modal */}
+      <DeleteConfirmModal
+        isOpen={deleteReviewModalState.isOpen}
+        onClose={() => setDeleteReviewModalState({ isOpen: false, reviewId: null, loading: false })}
+        onConfirm={confirmDeleteReview}
+        title="Delete Review?"
+        itemType="review"
+        message="Are you sure you want to remove your review and rating from this listing?"
+        confirmText="Yes, Delete Review"
+        loading={deleteReviewModalState.loading}
+      />
 
     </div>
   );

@@ -31,6 +31,7 @@ import { useVisits } from '../context/VisitContext';
 import Avatar from '../components/common/Avatar';
 import api from '../services/api';
 import ListingCard from '../components/listings/ListingCard';
+import DeleteConfirmModal from '../components/common/DeleteConfirmModal';
 
 export default function Profile() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -64,6 +65,7 @@ export default function Profile() {
   const [updateLoading, setUpdateLoading] = useState(false);
   const [updateSuccess, setUpdateSuccess] = useState(null);
   const [updateError, setUpdateError] = useState(null);
+  const [deleteModalState, setDeleteModalState] = useState({ isOpen: false, listingId: null, title: '', loading: false });
 
   // Pagination States
   const [listingsPage, setListingsPage] = useState(1);
@@ -201,9 +203,17 @@ export default function Profile() {
     }
   };
 
-  const handleDeleteListing = async (listingId) => {
-    if (!window.confirm('Are you sure you want to permanently delete this listing?')) return;
+  const handleDeleteListing = (listing) => {
+    const listingId = listing._id || listing.id;
+    const title = listing.title || 'Untitled Property';
+    setDeleteModalState({ isOpen: true, listingId, title, loading: false });
+  };
+
+  const confirmDeleteListing = async () => {
+    const listingId = deleteModalState.listingId;
+    if (!listingId) return;
     try {
+      setDeleteModalState((prev) => ({ ...prev, loading: true }));
       await api.deleteListing(listingId);
       setProfileData((prev) => ({
         ...prev,
@@ -214,8 +224,10 @@ export default function Profile() {
         },
       }));
       toast.success('Listing Removed', 'Property removed from your dashboard.');
+      setDeleteModalState({ isOpen: false, listingId: null, title: '', loading: false });
     } catch (err) {
       toast.error('Error', err.message || 'Failed to delete listing');
+      setDeleteModalState((prev) => ({ ...prev, loading: false }));
     }
   };
 
@@ -702,7 +714,7 @@ export default function Profile() {
                               Edit
                             </Link>
                             <button
-                              onClick={() => handleDeleteListing(listing._id || listing.id)}
+                              onClick={() => handleDeleteListing(listing)}
                               className="p-1.5 rounded-xl bg-rose-50 hover:bg-rose-100 text-[#FE424D] transition-colors cursor-pointer"
                               title="Delete listing"
                             >
@@ -1214,6 +1226,19 @@ export default function Profile() {
         </div>
 
       </div>
+
+      {/* Delete Listing Confirmation Modal */}
+      <DeleteConfirmModal
+        isOpen={deleteModalState.isOpen}
+        onClose={() => setDeleteModalState({ isOpen: false, listingId: null, title: '', loading: false })}
+        onConfirm={confirmDeleteListing}
+        title="Delete Property Listing?"
+        itemName={deleteModalState.title}
+        itemType="property listing"
+        message="Are you sure you want to permanently delete this property listing? This will remove all photos, reviews, and bookings associated with it."
+        confirmText="Yes, Delete Listing"
+        loading={deleteModalState.loading}
+      />
     </div>
   );
 }

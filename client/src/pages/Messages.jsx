@@ -25,6 +25,7 @@ import { useVisits } from '../context/VisitContext';
 import { useToast } from '../context/ToastContext';
 import { useAuth } from '../context/AuthContext';
 import Avatar from '../components/common/Avatar';
+import DeleteConfirmModal from '../components/common/DeleteConfirmModal';
 
 export default function Messages() {
   const {
@@ -44,8 +45,10 @@ export default function Messages() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const [inputMessage, setInputMessage] = useState('');
+  const [replyText, setReplyText] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
+  const [filterType, setFilterType] = useState('all'); // 'all', 'tenant', 'host'
+  const [threadToDelete, setThreadToDelete] = useState(null);
   const [mobileShowChat, setMobileShowChat] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
   const chatContainerRef = useRef(null);
@@ -289,7 +292,7 @@ export default function Messages() {
                             <button
                               onClick={(e) => {
                                 e.stopPropagation();
-                                deleteThread(thread.id);
+                                setThreadToDelete(thread);
                               }}
                               className="opacity-0 group-hover:opacity-100 p-1 text-slate-300 hover:text-red-500 hover:bg-red-50 rounded-lg transition-all"
                               title="Delete conversation"
@@ -371,7 +374,7 @@ export default function Messages() {
                     </a>
 
                     <button
-                      onClick={() => deleteThread(activeThread.id)}
+                      onClick={() => setThreadToDelete(activeThread)}
                       className="p-2.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-xl border border-slate-200/80 transition-all"
                       title="Delete thread"
                     >
@@ -515,6 +518,23 @@ export default function Messages() {
           </div>
         </div>
       </div>
+
+      {/* Delete Conversation Confirmation Modal */}
+      <DeleteConfirmModal
+        isOpen={Boolean(threadToDelete)}
+        onClose={() => setThreadToDelete(null)}
+        onConfirm={() => {
+          if (threadToDelete) {
+            deleteThread(threadToDelete.id);
+            setThreadToDelete(null);
+          }
+        }}
+        title="Delete Conversation?"
+        itemName={threadToDelete?.participant?.name ? `Chat with ${threadToDelete.participant.name}` : threadToDelete?.listingTitle}
+        itemType="conversation"
+        message="Are you sure you want to delete this conversation? All chat messages in this thread will be permanently removed."
+        confirmText="Yes, Delete Conversation"
+      />
     </div>
   );
 }
