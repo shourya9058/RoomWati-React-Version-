@@ -127,12 +127,25 @@ app.use(cors({
         // Allow requests with no origin (e.g. mobile apps, curl, server-to-server)
         if (!origin) return callback(null, true);
         const normalizedOrigin = origin.replace(/\/$/, '');
+
+        // Match explicitly configured origins or wildcard
         if (allowedOrigins.indexOf(normalizedOrigin) !== -1 || allowedOrigins.includes('*')) {
             return callback(null, true);
         }
-        return callback(new Error(`CORS policy does not allow access from origin ${origin}`), false);
+
+        // Automatically match Vercel production & preview domains (*.vercel.app)
+        try {
+            const host = new URL(origin).hostname;
+            if (host === 'vercel.app' || host.endsWith('.vercel.app')) {
+                return callback(null, true);
+            }
+        } catch (_) {}
+
+        return callback(null, false);
     },
-    credentials: true
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
 }));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
