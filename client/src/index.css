@@ -127,6 +127,19 @@
   animation: modalScaleIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
 
+.animate-scale-up {
+  animation: modalScaleIn 0.25s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes shortBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.animate-bounce-short {
+  animation: shortBounce 2s ease-in-out infinite;
+}
+
 /* Image aspect ratio container */
 .listing-img-container {
   overflow: hidden;
