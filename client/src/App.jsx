@@ -40,12 +40,12 @@ import SitemapPage from './pages/SitemapPage';
 
 export default function App() {
   return (
-    <AuthProvider>
-      <NotificationProvider>
-        <ToastProvider>
-          <ChatProvider>
-            <VisitProvider>
-              <Router>
+    <Router>
+      <AuthProvider>
+        <NotificationProvider>
+          <ToastProvider>
+            <ChatProvider>
+              <VisitProvider>
                 <ScrollToTop />
                 <FloatingChatNotification />
                 <div className="flex flex-col min-h-screen">
@@ -118,12 +118,12 @@ export default function App() {
                   </main>
                   <Footer />
                 </div>
-              </Router>
-            </VisitProvider>
-          </ChatProvider>
-        </ToastProvider>
-      </NotificationProvider>
-    </AuthProvider>
+              </VisitProvider>
+            </ChatProvider>
+          </ToastProvider>
+        </NotificationProvider>
+      </AuthProvider>
+    </Router>
   );
 }
 

@@ -45,7 +45,7 @@ export default function Messages() {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
 
-  const [replyText, setReplyText] = useState('');
+  const [inputMessage, setInputMessage] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
   const [filterType, setFilterType] = useState('all'); // 'all', 'tenant', 'host'
   const [threadToDelete, setThreadToDelete] = useState(null);
